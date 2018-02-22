@@ -51,6 +51,8 @@ const blogs = [
   }
 ]
 
+listHelper.mostBlogs(blogs)
+
 describe('total likes', () => {
   test('of empty list is zero', () => {
     expect(listHelper.totalLikes(tyhja)).toBe(0)
@@ -66,6 +68,18 @@ describe('blog statistics', () => {
     favorite = listHelper.favoriteBlog(blogs)
     expect(favorite.author).toEqual('Edsger W. Dijkstra')
     expect(favorite.likes).toBe(12)
+  })
+
+  test('prolific author is found', () => {
+    favorite = listHelper.mostBlogs(blogs)
+    expect(favorite.author).toEqual('Robert C. Martin')
+    expect(favorite.blogs).toBe(3)
+  })
+
+  test('favorite author is found', () => {
+    favorite = listHelper.mostLikes(blogs)
+    expect(favorite.author).toEqual('Edsger W. Dijkstra')
+    expect(favorite.likes).toBe(17)
   })
 
 })

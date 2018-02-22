@@ -10,7 +10,8 @@
     "mongoose": "^5.0.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1"
+    "react-scripts": "1.1.1",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./src/index.js",

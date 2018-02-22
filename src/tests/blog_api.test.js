@@ -38,9 +38,9 @@ describe('when there are initially some notes saved', async () => {
     expect(contents).toContain('Sleepy kitten')
   })
 })
-/*
 
-describe('when trying to add a blog', async () => {
+
+describe.skip('when trying to add a blog', async () => {
   test('a valid blog can be added', async () => {
     const blogsAtStart = await blogsInDb()
 
@@ -136,7 +136,7 @@ describe('when trying to add a blog', async () => {
     expect(blogsAfterOperation[blogsAfterOperation.length-1].title).toContain('Blog without likes')
   })
 })
-*/
+
 
 describe('when there is initially one user at db', async () => {
   beforeAll(async () => {
@@ -186,6 +186,68 @@ test('POST /api/users fails with proper statuscode and message if username alrea
 
   const usersAfterOperation = await usersInDb()
   expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
+})
+
+test('POST /api/users fails with proper statuscode and message if username is too short', async () => {
+  const usersBeforeOperation = await usersInDb()
+
+  const newUser = {
+    username: 'Do',
+    name: 'etunimi',
+    password: 'salasana'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  expect(result.body).toEqual({ error: 'username must be at least 3 characters long'})
+
+  const usersAfterOperation = await usersInDb()
+  expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
+})
+
+test('created user is an adult unless otherwise stated', async () => {
+  const usersBeforeOperation = await usersInDb()
+
+  const newUser = {
+    username: 'Doge',
+    name: 'etunimi',
+    password: 'salasana'
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfterOperation = await usersInDb()
+  expect(usersAfterOperation.length).toBe(usersBeforeOperation.length+1)
+  expect(usersAfterOperation[usersAfterOperation.length-1].adult).toBe(true)
+})
+
+test('a non-adult user can be created', async () => {
+  const usersBeforeOperation = await usersInDb()
+
+  const newUser = {
+    username: 'dolphin',
+    name: 'Dolph Lundgren',
+    password: 'salasana',
+    adult: false
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfterOperation = await usersInDb()
+  expect(usersAfterOperation.length).toBe(usersBeforeOperation.length+1)
+  expect(usersAfterOperation[usersAfterOperation.length-1].adult).toBe(false)
 })
 
 

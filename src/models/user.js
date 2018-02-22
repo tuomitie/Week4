@@ -13,7 +13,7 @@ userSchema.statics.format = (user) => {
     id: user.id,
     username: user.username,
     name: user.name,
-    adult: user.adult === undefined ? true : user.adult,
+    adult: user.adult,
     blogs: user.blogs
   }
 }
